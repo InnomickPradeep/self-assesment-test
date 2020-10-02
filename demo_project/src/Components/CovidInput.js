@@ -13,26 +13,31 @@ import { Paper } from '@material-ui/core';
 import { FilterNone } from '@material-ui/icons';
 import {TextField, InputBase} from '@material-ui/core';
 import {ButtonBase} from '@material-ui/core';
+import English from '../Translations/en.json';
+import Hindi from '../Translations/hin.json';
+import Telugu from '../Translations/tel.json';
+import { setTranslations, setDefaultLanguage, setDefaultTranslations,useTranslation, getLanguage } from 'react-multi-lang'
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow:1,
-    height:"1500px",
+    maxHeight:"1500px",
     backgroundColor:"#ebedec"
   },
   title: {
     flexGrow: 1,
     color:"#1d4359",
-    fontSize:"14px",
+    fontSize:"16px",
     fontWeight:"bold",
     paddingTop:"20px",
     fontStyle:"bold",
-    paddingLeft:"0px",
+    paddingLeft:"185px",
     paddingRight:"430px"
+    
   },
   bodyStyle:{
-   marginLeft:"-100px !important",
+   
   },
   inputStyle:{
       marginTop:"10px",
@@ -41,15 +46,20 @@ const useStyles = makeStyles((theme) => ({
       textTransform:"none",
       cursor:"none",
       marginBottom:"20px",
-      maxWidth:"460px",
-      marginLeft:"-50px !important",
-      textAlign:"left"
+      maxWidth:"470px",
+      textAlign:"left",
+      marginLeft:"400px !important",
   },
   divButton:{
     display:"none",
   },
-  gender:{
-      marginLeft:"-270px",
+  AgeInput:{
+    borderBottom:"1px solid #30b085 !important",
+    width:"450px",
+    //marginLeft:"550px",
+    margin:"10px 12px 8px 12px !important",
+    color:"primary",
+
   },
   AgeButton:{
      marginTop:"10px",
@@ -59,22 +69,32 @@ const useStyles = makeStyles((theme) => ({
       cursor:"none",
       marginBottom:"20px",
       maxWidth:"460px",
-      marginLeft:"-360px !important",
       textAlign:"left"
   },
-  AgeInput:{
-    borderBottom:"1px solid #30b085",
-    width:"450px",
-    marginLeft:"600px !important",
-    paddingBottom:"5px",
-  },
-  ageDiv:{
-    border:"1px solid grey",
-    borderRadius:"12px",
-    backgroundColor:"white",
-    width:"100px",
-  },
+ 
+ 
   buttonStyle:{
+    marginRight:"5px",
+   color:"#30b085",
+    backgroundColor:"white",
+    borderRadius:"8px",
+    fontSize:"14px",
+    padding:"10px 20px",
+    fontWeight:"normal",
+    fontStyle:"normal",
+    textTransform:"none",
+    marginTop:"8px",
+  },
+  AgeDiv:{
+    border:"1px solid white",
+    borderRadius:"14px",
+    width:"500px",
+    marginLeft:"550px",
+    boxShadow:"2px 5px white",
+    backgroundColor:"white",
+    
+  },
+  firstButton:{
     marginRight:"5px",
     color:"#30b085",
     backgroundColor:"white",
@@ -84,16 +104,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight:"normal",
     fontStyle:"normal",
     textTransform:"none",
+    marginLeft:"400px !important",
+    marginTop:"8px",
   },
-
-  
 }));
 
-
+setDefaultTranslations({Hindi,Telugu,English});
 
 function CovidInput() {
   const classes = useStyles();
-
   const [isClicked,setClick]=useState(false);
   const [language, setlanguage]=useState("");
   const [age,setAge]=useState(0);
@@ -142,8 +161,15 @@ function CovidInput() {
     setTemp(event.target.value);
   }
   function setStates(event){
-    setlanguage(event);
     setClick(true);
+    if(event==="English"){
+    setDefaultLanguage("English");
+    }
+    else if(event==="తెలుగు"){
+      setDefaultLanguage("Telugu");
+    }
+    setlanguage(event);
+    
   }
   const handleChange=(event)=>{
     
@@ -153,14 +179,14 @@ function CovidInput() {
     setGenderClick(true);
     setgender(event.target.value)
   }
-  console.log(language);
+  const t = useTranslation();
   
   return (
     <div className={classes.root}>
       <div>
       <AppBar position="static" style={{backgroundColor:"white", height:"75px"}}>
         <Toolbar>
-            <img src={process.env.PUBLIC_URL + "/apollo_log.png"} width="60" height="60" style={{paddingLeft:"350px"}}  alt="apollo log" />
+            <img src={process.env.PUBLIC_URL + "/apollo_log.png"} width="60" height="60" style={{paddingLeft:"370px"}}  alt="apollo log" />
           <Typography variant="h6" className={classes.title}>
             CORONAVIRUS RISK SCAN
           </Typography>
@@ -174,25 +200,24 @@ function CovidInput() {
       variant="contained" className={classes.inputStyle} color="primary">Hello, Please tell us which language you'd like to take this test in:</Button>
       { isClicked===false ? 
       <div>
-      <ButtonBase variant="contained" value="English" className={classes.buttonStyle} onClick={(event)=>setStates(event.target.value)}>English</ButtonBase>
-      <ButtonBase variant="contained" value="తెలుగు" className={classes.buttonStyle} onClick={(event)=>setStates(event)}>తెలుగు</ButtonBase>
-      <ButtonBase variant="contained" value="हिंदी" className={classes.buttonStyle} onClick={(event)=>setStates(event)}>हिंदी</ButtonBase>
-      <ButtonBase variant="contained"  value="தமிழ்" className={classes.buttonStyle} onClick={(event)=>setStates(event)}>தமிழ்</ButtonBase>
-      <ButtonBase variant="contained" value="বাংলা" className={classes.buttonStyle} onClick={(event)=>setStates(event)}>বাংলা</ButtonBase>
+      <ButtonBase variant="contained" value="English" className={classes.firstButton} onClick={(event)=>setStates(event.target.value)}>English</ButtonBase>
+      <ButtonBase variant="contained" value="తెలుగు" className={classes.buttonStyle} onClick={(event)=>setStates(event.target.value)}>తెలుగు</ButtonBase>
+      <ButtonBase variant="contained" value="हिंदी" className={classes.buttonStyle} onClick={(event)=>setStates(event.target.value)}>हिंदी</ButtonBase>
+      <ButtonBase variant="contained"  value="தமிழ்" className={classes.buttonStyle} onClick={(event)=>setStates(event.target.value)}>தமிழ்</ButtonBase>
+      <ButtonBase variant="contained" value="বাংলা" className={classes.buttonStyle} onClick={(event)=>setStates(event.target.value)}>বাংলা</ButtonBase>
       </div>
       : <div>
       <div>  
-      <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={language}>{language}</Button>
+      <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={language}>{language}</Button>
         </div>
         <div>
         <Button variant="contained" className={classes.inputStyle} color="primary">
-        Hi! Our coronavirus disease self assessment scan has been developed on the basis of guidelines from the WHO and MHFW, Government of India. This interaction should not be taken as expert medical advice. 
-        Any information you share with us will be kept strictly confidential.
+        {t("COMMON.Appintro")}
           </Button>
          </div>
          <div>
-          <Button variant="contained" className={classes.AgeButton} color="primary">
-          How old are you?
+          <Button variant="contained" className={classes.inputStyle} color="primary">
+          {t("COMMON.AgeQuery")}
             </Button>
           </div> 
     
@@ -200,7 +225,7 @@ function CovidInput() {
         
            {isDone === false ?
            <Fragment>
-            <div className={classes.ageDiv}>
+            <div className={classes.AgeDiv}>
             <form>
     
               <InputBase
@@ -208,7 +233,7 @@ function CovidInput() {
             className={classes.AgeInput}
             type="number"
             required
-            placeholder="Your age in years"
+            placeholder={t("COMMON.Queryplaceholder")}
             onChange={handleChange}
             InputLabelProps={{
             shrink: true,
@@ -217,112 +242,130 @@ function CovidInput() {
             </form>
     
             </div>
-            <Button variant="default" onClick={()=>setDone(true)} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"5px",marginLeft:"630px",textTransform:"none",fontStyle:"normal"}}>Done</Button>
+            <div>
+        <Button variant="default" onClick={()=>setDone(true)} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"10px",marginLeft:"950px",textTransform:"none",fontStyle:"normal"}}>{t("COMMON.DoneButton")}</Button>
+            </div>
             </Fragment>
 
             : 
             <div>
               <div>
-        <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={age}>{age}</Button>
+        <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginTop:"5px",marginLeft:"950px"}} value={age}>{age}</Button>
         </div>
-        <div className={classes.gender}>
+        <div>
         <div >
-        <Button variant="contained" className={classes.inputStyle} color="primary">Please select your gender</Button>
+        <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.GenderQuery")}</Button>
         </div>
         </div>
         {genderClick===false ?
         <div>
         <div>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value="Male" onClick={handleGender}>Male</ButtonBase>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value="Female" onClick={handleGender}>Female</ButtonBase>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value="Others" onClick={handleGender}>Others</ButtonBase>
+        <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.genderOptions.Male")} onClick={handleGender}>{t("COMMON.genderOptions.Male")}</ButtonBase>
+        <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.genderOptions.Female")} onClick={handleGender}>{t("COMMON.genderOptions.Female")}</ButtonBase>
+        <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.genderOptions.Others")} onClick={handleGender}>{t("COMMON.genderOptions.Others")}</ButtonBase>
           </div>
           </div>
         :
            <div>
-             <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getGender}>{getGender}</Button>
+             <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getGender}>{getGender}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">Please let us know your current body temperature in degree Fahrenheit (Normal body temperature is 98.6°F):</Button>
+        <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.temperatureQuery")}</Button>
             </div>
             {isTempClick===false ?
             <div>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Normal(96°F-98.6°F)" onClick={handleTemp}>Normal(96°F-98.6°F)</ButtonBase>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value="Fever(98.6°F-120°F)" onClick={handleTemp}>Fever(98.6°F-120°F))</ButtonBase>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value={temp.value} onClick={handleTemp}>{temp.value}</ButtonBase>
-        <ButtonBase variant="contained" className={classes.buttonStyle} value="Don't know" onClick={handleTemp}>Don't know</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.temperatureOptions.Normal")} onClick={handleTemp}>{t("COMMON.temperatureOptions.Normal")}</ButtonBase>
+        <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.temperatureOptions.Fever")} onClick={handleTemp}>{t("COMMON.temperatureOptions.Fever")}</ButtonBase>
+        <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.temperatureOptions.High Fever")} onClick={handleTemp}>{t("COMMON.temperatureOptions.High Fever")}</ButtonBase>
+        <div>
+        <ButtonBase variant="contained" className={classes.firstButton}  value={t("COMMON.temperatureOptions.Don't Know")} onClick={handleTemp}>{t("COMMON.temperatureOptions.Don't Know")}</ButtonBase>
+            </div>
             </div>
           :
           <div>
-            <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getTemp}>{getTemp}</Button>
+            <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getTemp}>{getTemp}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">Are you experiencing any of the symptoms below (mark all those applicable)</Button>
+            <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SymptomsQuery")}</Button>
            
             </div>
             {haveSymptoms===false ?
-            <div style={{marginLeft:"-300px !important"}}>
-            <ButtonBase variant="contained" className={classes.buttonStyle}  value="Dry Cough" onClick={handleSymptoms}>Dry Cough</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Loss or Diminished Sense of Smell" onClick={handleSymptoms}>Loss or Diminished Sense of Smell</ButtonBase>
-          <ButtonBase variant="contained" className={classes.buttonStyle} value="Sore Throat" onClick={handleSymptoms}>Sore Throat</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value="Weakness" onClick={handleSymptoms}>Weakness</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value="Change in Apetite" onClick={handleSymptoms}>Change in Apetite</ButtonBase>
-         <Button variant="default" onClick={handleSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}}>None of These</Button>
+            <div>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.DryCough")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.DryCough")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.loss or dim")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.loss or dim")}</ButtonBase>
+          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Sore Throat")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Sore Throat")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Weakness")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Weakness")}</ButtonBase>
+         <div>
+         <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.Change in Appetite")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Change in Appetite")}</ButtonBase>
+            <ButtonBase variant="default" onClick={handleSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.None of these")}>{t("COMMON.SymptomsOptions.None of these")}</ButtonBase>
+         </div>
             </div>
             :
             <div>
-              <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getSymptom}>{getSymptom}</Button>
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getSymptom}>{getSymptom}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">Additionally, please verify if you are experiencing any of the symptoms below (mark all those applicable)</Button>
+            <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.MoreSymptomsQuery")}</Button>
             </div>
             {haveMoreSymptoms===false ?
             <div style={{marginLeft:"-300px !important"}}>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Moderate to Severe Cough" onClick={handleMoreSymptoms}>Moderate to Severe Cough</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Feeling Breathless" onClick={handleMoreSymptoms}>Feeling Breathless</ButtonBase>
-          <ButtonBase variant="contained" className={classes.buttonStyle} value="Difficulty in Breathing" onClick={handleMoreSymptoms}>Difficulty in Breathing</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value="Drowsiness" onClick={handleMoreSymptoms}>Drowsiness</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value="Persistant Pain and Pressure in Chest" onClick={handleMoreSymptoms}>Persistant Pain and Pressure in Chest</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value="Severe Weakness<" onClick={handleMoreSymptoms}>Severe Weakness</ButtonBase>
-         <Button variant="default" onClick={handleMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value="None of These">None of These</Button>
+            <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Moderate")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Moderate")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Feeling Breathless")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Feeling Breathless")}</ButtonBase>
+          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Difficulty")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Difficulty")}</ButtonBase>
+          <div>
+         <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Drowsiness")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Drowsiness")}</ButtonBase>
+        
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Persistant")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Persistant")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Severe Weakness")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Severe Weakness")}</ButtonBase>
+         </div><div>
+         <ButtonBase variant="default" onClick={handleMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.MoreSymptomsOptions.None of These")}>{t("COMMON.MoreSymptomsOptions.None of These")}</ButtonBase>
+           </div>
             </div>
           :
               <div>
-            <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getMoreSymptom}>{getMoreSymptom}</Button>
+            <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getMoreSymptom}>{getMoreSymptom}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">We would like to know about your smoking history</Button>
+            <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SmokeQuery")}</Button>
             </div>
             {doSmoke===false ?
             <div>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Current Smoker" onClick={handleSmoke}>Current Smoker</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Previous Smoker(Before last 6 months)" onClick={handleSmoke}>Previous Smoker(Before last 6 months)</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Never Smoke" onClick={handleSmoke}>Never Smoke</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SmokeOptions.Current Smoker")} onClick={handleSmoke}>{t("COMMON.SmokeOptions.Current Smoker")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SmokeOptions.Previous Smoker")} onClick={handleSmoke}>{t("COMMON.SmokeOptions.Previous Smoker")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SmokeOptions.Never Smoke")} onClick={handleSmoke}>{t("COMMON.SmokeOptions.Never Smoke")}</ButtonBase>
             </div>
             :
             <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getSmokeInfo}>{getSmokeInfo}</Button>
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getSmokeInfo}>{getSmokeInfo}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">Please select your travel and exposure details</Button>
+            <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.TravelQuery")}</Button>
             </div>
             {travelOptionClick===false ?
             <div>
-            <ButtonBase variant="contained" className={classes.buttonStyle}  value="No Travel History" onClick={handleTravel}>No Travel History</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle}  value="No contact with anyone with Symptoms" onClick={handleTravel}>No contact with anyone with Symptoms</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="History of travel or meeting in affected geographical area in last 14 days" onClick={handleTravel}>History of travel or meeting in affected geographical area in last 14 days</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Close contact with a person with Fever and cough in last 14 days" onClick={handleTravel}>Close contact with a person with Fever and cough in last 14 days</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton}  value={t("COMMON.TravelOptions.No Travel History")} onClick={handleTravel}>{t("COMMON.TravelOptions.No Travel History")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle}  value={t("COMMON.TravelOptions.No contact")} onClick={handleTravel}>{t("COMMON.TravelOptions.No contact")}</ButtonBase>
+            <div>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.TravelOptions.History of travel")} onClick={handleTravel}>{t("COMMON.TravelOptions.History of travel")}</ButtonBase>
             </div>
+            <div>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.TravelOptions.Close contact")} onClick={handleTravel}>{t("COMMON.TravelOptions.Close contact")}</ButtonBase>
+            </div>
+           </div>
             :
             <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"630px"}} value={getTravelDetails}>{getTravelDetails}</Button>
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getTravelDetails}>{getTravelDetails}</Button>
             <div>
-            <Button variant="contained" className={classes.inputStyle} color="primary">Do you have a history of any of these conditions (mark all those applicable)</Button>
+            <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.DiseaseQuery")}</Button>
             </div>
             <div>
-            <ButtonBase variant="contained" className={classes.buttonStyle}  value="Diabetes" onClick={handleDisease}>Diabetes</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="High Blood Pressure" onClick={handleDisease}>High Blood Pressure</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Heart Disease" onClick={handleDisease}>Heart Disease</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Kidney Disease" onClick={handleDisease}>Kidney Disease</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Lung Disease(Asthama,COPD,TB etc)" onClick={handleDisease}>Lung Disease(Asthama,COPD,TB etc)</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Stroke Disease<" onClick={handleDisease}>Stroke Disease</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value="Reduce Immunity" onClick={handleDisease}>Reduce Immunity</ButtonBase>
-            <Button variant="contained" style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}}value="None of these" onClick={handleDisease}>None of These</Button>
+            <ButtonBase variant="contained" className={classes.firstButton}  value={t("COMMON.DiseaseOptions.Diabetes")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Diabetes")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.HBP")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.HBP")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Heart Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Heart Disease")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Kidney Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Kidney Disease")}</ButtonBase>
+            <div>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.DiseaseOptions.Lung Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Lung Disease")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Stroke")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Stroke")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Reduced Immunity")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Reduced Immunity")}</ButtonBase>
+            </div>
+            <div>
+            <ButtonBase variant="default" onClick={handleDisease} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.None of These")}>{t("COMMON.DiseaseOptions.None of These")}</ButtonBase>
+            </div>
             </div>
             </div>
                }

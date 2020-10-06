@@ -1,31 +1,18 @@
 import React , {useState,Fragment} from 'react';
-import $, { isFunction } from 'jquery';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import theme from '../theme';
 import Fab from '@material-ui/core/Fab';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { Paper } from '@material-ui/core';
-import { FilterNone } from '@material-ui/icons';
-import {TextField, InputBase} from '@material-ui/core';
+import { InputBase} from '@material-ui/core';
 import {ButtonBase} from '@material-ui/core';
 import English from '../Translations/en.json';
 import Hindi from '../Translations/hin.json';
 import Telugu from '../Translations/tel.json';
 import {useHistory} from 'react-router-dom';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import Results from '../Components/Results';
-import { setTranslations, setDefaultLanguage, setDefaultTranslations,useTranslation, getLanguage } from 'react-multi-lang'
+import { setDefaultLanguage, setDefaultTranslations,useTranslation} from 'react-multi-lang'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,10 +52,13 @@ const useStyles = makeStyles((theme) => ({
   AgeInput:{
     borderBottom:"1px solid #30b085 !important",
     width:"450px",
-    //marginLeft:"550px",
     margin:"10px 12px 8px 12px !important",
     color:"primary",
 
+  },
+  appBarStyle:{
+    backgroundColor:"white", 
+    height:"75px"
   },
   AgeButton:{
      marginTop:"10px",
@@ -103,6 +93,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor:"white",
     
   },
+  buttonStyleright:{
+    color:"darkblue",
+    fontSize:"14px",
+    marginLeft:"950px",
+    marginRight:"5px",
+    backgroundColor:"white",
+    borderRadius:"8px",
+    padding:"10px 20px",
+    fontWeight:"normal",
+    fontStyle:"normal",
+    textTransform:"none",
+    marginTop:"8px",
+  },
   firstButton:{
     marginRight:"5px",
     color:"#30b085",
@@ -115,6 +118,42 @@ const useStyles = makeStyles((theme) => ({
     textTransform:"none",
     marginLeft:"400px !important",
     marginTop:"8px",
+  },
+  doneStyle:{
+    backgroundColor:"orange",
+    color:"white",
+    borderRadius:"8px",
+    marginTop:"10px",
+    marginLeft:"950px",
+    textTransform:"none",
+    fontStyle:"normal"
+  },
+  optionalButton:{
+    backgroundColor:"orange",
+    color:"white",
+    borderRadius:"8px",
+    padding:"10px 20px",
+    fontSize:"14px",
+    marginTop:"5px",
+    textTransform:"none",
+    fontStyle:"normal"
+  },
+  optionalButton2:{
+    backgroundColor:"orange",
+    color:"white",
+    borderRadius:"8px",
+    padding:"10px 20px",
+    fontSize:"14px",
+    marginTop:"5px",
+    textTransform:"none",
+    fontStyle:"normal",
+    marginLeft:"400px"
+  },
+  fabStyle:{
+    backgroundColor:"white",
+    color:"#30b085",
+    marginLeft:"1250px",
+    marginTop:"450px"
   },
 }));
 
@@ -152,7 +191,6 @@ function CovidInput() {
 
 
 const history=useHistory();
-console.log(history);
 const handleResults=(arg)=>{
   const path="/Results/".concat(arg);
   history.push(path);
@@ -167,16 +205,11 @@ const handleResults=(arg)=>{
   }
   const selectSymptoms=(event)=>{
     if(getConfirmedSymptoms.includes(event.target.value)===true){
-      // let res1=getConfirmedSymptoms.replace(event.target.value,'');
-        //setConfirmedSymptoms(res1);
         let removeSymptom=event.target.value;
         let res=getConfirmedSymptoms.filter(item =>item !==removeSymptom);
         setConfirmedSymptoms(res);
      }
      else{
-      // let res=getConfirmedSymptoms.concat(event.target.value);
-      //setConfirmedSymptoms(res);
-     
       let addSymptom=event.target.value;
       let res1=getConfirmedSymptoms.concat(addSymptom);
       setConfirmedSymptoms(res1);
@@ -277,8 +310,6 @@ const handleResults=(arg)=>{
     &&
     getConfirmedDisease.length ===0
     ){  
-
-        console.log("In moderate")
         handleResults("Moderate");
     }
     else if ( (getTemp === t("COMMON.temperatureOptions.Normal") || getTemp=== t("COMMON.temperatureOptions.Don't Know"))
@@ -293,8 +324,6 @@ const handleResults=(arg)=>{
     &&
     getConfirmedDisease.length ===0
     ){
-      
-      console.log("In low:")
      
       handleResults("low");
     }
@@ -312,8 +341,6 @@ const handleResults=(arg)=>{
    ( getLastConfirm === t("COMMON.SymptomsCheckOptions.Improved") || getLastConfirm === t("COMMON.SymptomsCheckOptions.No Change"))
     ){
       
-      console.log("In low:")
-     
       handleResults("low");
     }
      else  if ((getTemp !==t("COMMON.temperatureOptions.Normal") || getTemp !==t("COMMON.temperatureOptions.Don't Know"))
@@ -326,12 +353,9 @@ const handleResults=(arg)=>{
       &&
       getConfirmedDisease.length >=3 
       ){  
-  
-          console.log("In High")
           handleResults("High");
       }
       else{
-            console.log("In moderate");
             handleResults("Moderate");
       }
   }
@@ -345,11 +369,12 @@ const handleResults=(arg)=>{
   }
   const t = useTranslation();
   
+  
   return (
 
     <div className={classes.root}>
       <div>
-      <AppBar position="static" style={{backgroundColor:"white", height:"75px"}}>
+      <AppBar position="static" className={classes.appBarStyle}>
         <Toolbar>
             <img src={process.env.PUBLIC_URL + "/apollo_log.png"} width="60" height="60" style={{paddingLeft:"370px"}}  alt="apollo log" />
           <Typography variant="h6" className={classes.title}>
@@ -371,7 +396,7 @@ const handleResults=(arg)=>{
       </div>
       : <div>
       <div>  
-      <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={language}>{language}</Button>
+      <Button variant="contained" className={classes.buttonStyleright}  value={language}>{language}</Button>
         </div>
         <div>
         <Button variant="contained" className={classes.inputStyle} color="primary">
@@ -406,14 +431,14 @@ const handleResults=(arg)=>{
     
             </div>
             <div>
-         <Button variant="default" onClick={()=>setDone(true)} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"10px",marginLeft:"950px",textTransform:"none",fontStyle:"normal"}}>{t("COMMON.DoneButton")}</Button>
+         <Button variant="default" onClick={()=>setDone(true)} className={classes.doneStyle}> {t("COMMON.DoneButton")}</Button>
             </div>
             </Fragment>
 
             : 
             <div>
               <div>
-        <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginTop:"5px",marginLeft:"950px"}} value={age}>{age}</Button>
+        <Button variant="contained" className={classes.buttonStyleright}  value={age}>{age}</Button>
         </div>
         <div>
         <div >
@@ -430,7 +455,7 @@ const handleResults=(arg)=>{
           </div>
         :
            <div>
-             <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getGender}>{getGender}</Button>
+             <Button variant="contained" className={classes.buttonStyleright} value={getGender}>{getGender}</Button>
             <div>
         <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.temperatureQuery")}</Button>
             </div>
@@ -445,7 +470,7 @@ const handleResults=(arg)=>{
             </div>
           :
           <div>
-            <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getTemp}>{getTemp}</Button>
+            <Button variant="contained" className={classes.buttonStyleright} value={getTemp}>{getTemp}</Button>
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SymptomsQuery")}</Button>
            
@@ -459,9 +484,9 @@ const handleResults=(arg)=>{
          <div>
          <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.Change in Appetite")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.Change in Appetite")}</ButtonBase>
             { getConfirmedSymptoms.length !==0 ?
-              <ButtonBase variant="default" onClick={confirmSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.Confirm")}>{t("COMMON.SymptomsOptions.Confirm")}</ButtonBase>
+              <ButtonBase variant="default" onClick={confirmSymptoms} className={classes.optionalButton} value={t("COMMON.SymptomsOptions.Confirm")}>{t("COMMON.SymptomsOptions.Confirm")}</ButtonBase>
             :
-            <ButtonBase variant="default" onClick={handleSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.None of these")}>{t("COMMON.SymptomsOptions.None of these")}</ButtonBase>
+            <ButtonBase variant="default" onClick={handleSymptoms}  className={classes.optionalButton} value={t("COMMON.SymptomsOptions.None of these")}>{t("COMMON.SymptomsOptions.None of these")}</ButtonBase>
             }
             </div>
             </div>
@@ -469,18 +494,18 @@ const handleResults=(arg)=>{
             <div>
               {haveSymptoms ===true ?
               <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getSymptom}>{getSymptom}</Button>
+              <Button variant="contained" className={classes.buttonStyleright}  value={getSymptom}>{getSymptom}</Button>
               </div>
               :
               <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedSymptoms}>{getConfirmedSymptoms}</Button>
+              <Button variant="contained" className={classes.buttonStyleright} value={getConfirmedSymptoms}>{getConfirmedSymptoms}</Button>
               </div>
               }
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.MoreSymptomsQuery")}</Button>
             </div>
             { (haveMoreSymptoms || isConfirmMoreSymptoms) ===false ?
-            <div style={{marginLeft:"-300px !important"}}>
+            <div>
             <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Moderate")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Moderate")}</ButtonBase>
             <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Feeling Breathless")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Feeling Breathless")}</ButtonBase>
           <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Difficulty")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Difficulty")}</ButtonBase>
@@ -491,18 +516,18 @@ const handleResults=(arg)=>{
          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Severe Weakness")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Severe Weakness")}</ButtonBase>
          </div><div>
            {getConfirmedMoreSymptoms.length ===0 ?
-         <ButtonBase variant="default" onClick={handleMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.MoreSymptomsOptions.None of These")}>{t("COMMON.MoreSymptomsOptions.None of These")}</ButtonBase>
+         <ButtonBase variant="default" onClick={handleMoreSymptoms} className={classes.optionalButton2} value={t("COMMON.MoreSymptomsOptions.None of These")}>{t("COMMON.MoreSymptomsOptions.None of These")}</ButtonBase>
          :
-         <ButtonBase variant="default" onClick={confirmMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.MoreSymptomsOptions.Confirm")}>{t("COMMON.MoreSymptomsOptions.Confirm")}</ButtonBase>
+         <ButtonBase variant="default" onClick={confirmMoreSymptoms} className={classes.optionalButton2} value={t("COMMON.MoreSymptomsOptions.Confirm")}>{t("COMMON.MoreSymptomsOptions.Confirm")}</ButtonBase>
            }  
          </div>
             </div>
           :
               <div>
                 {haveMoreSymptoms === true ?
-            <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getMoreSymptom}>{getMoreSymptom}</Button>
+            <Button variant="contained" className={classes.buttonStyleright}  value={getMoreSymptom}>{getMoreSymptom}</Button>
            :
-           <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedMoreSymptoms}>{getConfirmedMoreSymptoms}</Button>
+           <Button variant="contained" className={classes.buttonStyleright}  value={getConfirmedMoreSymptoms}>{getConfirmedMoreSymptoms}</Button>
           }
            <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SmokeQuery")}</Button>
@@ -515,7 +540,7 @@ const handleResults=(arg)=>{
             </div>
             :
             <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getSmokeInfo}>{getSmokeInfo}</Button>
+              <Button variant="contained" className={classes.buttonStyleright} value={getSmokeInfo}>{getSmokeInfo}</Button>
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.TravelQuery")}</Button>
             </div>
@@ -532,7 +557,7 @@ const handleResults=(arg)=>{
            </div>
             :
             <div>
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getTravelDetails}>{getTravelDetails}</Button>
+              <Button variant="contained" className={classes.buttonStyleright} value={getTravelDetails}>{getTravelDetails}</Button>
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.DiseaseQuery")}</Button>
             </div>
@@ -550,20 +575,20 @@ const handleResults=(arg)=>{
             <div>
               {getConfirmedDisease.length ===0 ?
             <ButtonBase variant="default" onClick={(event)=>{
-              selectDiseases(event)
+              handleDisease(event)
               handleRouting() 
-             }} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.None of These")}>{t("COMMON.DiseaseOptions.None of These")}</ButtonBase>
+             }} className={classes.optionalButton2}   value={t("COMMON.DiseaseOptions.None of These")}>{t("COMMON.DiseaseOptions.None of These")}</ButtonBase>
            :
-            <ButtonBase variant="default" onClick={confirmDisease} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.Confirm")}>{t("COMMON.DiseaseOptions.Confirm")}</ButtonBase>
+            <ButtonBase variant="default" onClick={confirmDisease} className={classes.optionalButton2}  value={t("COMMON.DiseaseOptions.Confirm")}>{t("COMMON.DiseaseOptions.Confirm")}</ButtonBase>
             }
             </div>
             </div>
             : 
             <div>
               {DiseaseOptionClick ===true ?
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getDiseaseDetails}>{getDiseaseDetails}</Button>
+              <Button variant="contained" className={classes.buttonStyleright}  value={getDiseaseDetails}>{getDiseaseDetails}</Button>
               :
-              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedDisease}>{getConfirmedDisease}</Button>
+              <Button variant="contained" className={classes.buttonStyleright}  value={getConfirmedDisease}>{getConfirmedDisease}</Button>
                }
               <div>
               <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SymptomsCheck")}</Button>
@@ -604,7 +629,7 @@ const handleResults=(arg)=>{
          
         </div>
       }
-      <Fab onClick={()=>window.location.reload()}  style={{backgroundColor:"white",color:"#30b085",marginLeft:"1250px",marginTop:"450px"}} aria-label="refresh">
+      <Fab onClick={()=>window.location.reload()} className={classes.fabStyle} aria-label="refresh">
         <RefreshIcon />
       </Fab>
        </div>

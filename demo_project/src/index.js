@@ -5,10 +5,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
-import {setDefaultTranslations, setDefaultLanguage} from 'react-multi-lang';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Results from './Components/Results';
-import CovidInput from './Components/CovidInput';
  
 
 ReactDOM.render(

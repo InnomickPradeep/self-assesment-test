@@ -1,4 +1,5 @@
 import React , {useState,Fragment} from 'react';
+import $, { isFunction } from 'jquery';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +17,14 @@ import {ButtonBase} from '@material-ui/core';
 import English from '../Translations/en.json';
 import Hindi from '../Translations/hin.json';
 import Telugu from '../Translations/tel.json';
+import {useHistory} from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Results from '../Components/Results';
 import { setTranslations, setDefaultLanguage, setDefaultTranslations,useTranslation, getLanguage } from 'react-multi-lang'
 
 
@@ -131,12 +140,96 @@ function CovidInput() {
   const [getTravelDetails, setTravelDetails]=useState("");
   const [DiseaseOptionClick,setDiseaseOption]=useState(false);
   const [getDiseaseDetails,setDiseaseDetails]=useState("");
-  const temp={
-     value:"High Fever(>102°F)"
+  const [isConfirmSymptoms,setConfirm]=useState(false);
+  const [getConfirmedSymptoms,setConfirmedSymptoms]=useState([]);
+  const [isConfirmMoreSymptoms,setConfirmMore]=useState(false);
+  const [getConfirmedMoreSymptoms,setConfirmedMoreSymptoms]=useState([]);
+  const [isDiseaseConfirm,setDiseaseConfirm]=useState(false);
+  const [getConfirmedDisease,setConfirmedDisease]=useState([]);
+  const [lastConfirmClick,setLastConfirmClick]=useState(false);
+  const [getLastConfirm,setLastConfirm]=useState("");
+
+
+
+const history=useHistory();
+console.log(history);
+const handleResults=(arg)=>{
+  const path="/Results/".concat(arg);
+  history.push(path);
+}
+  const handleLastConfirm=(event)=>{
+    setLastConfirmClick(true);
+    setLastConfirm(event.target.value);
   }
   const handleTravel=(event)=>{
     setTravelOption(true);
     setTravelDetails(event.target.value);
+  }
+  const selectSymptoms=(event)=>{
+    if(getConfirmedSymptoms.includes(event.target.value)===true){
+      // let res1=getConfirmedSymptoms.replace(event.target.value,'');
+        //setConfirmedSymptoms(res1);
+        let removeSymptom=event.target.value;
+        let res=getConfirmedSymptoms.filter(item =>item !==removeSymptom);
+        setConfirmedSymptoms(res);
+     }
+     else{
+      // let res=getConfirmedSymptoms.concat(event.target.value);
+      //setConfirmedSymptoms(res);
+     
+      let addSymptom=event.target.value;
+      let res1=getConfirmedSymptoms.concat(addSymptom);
+      setConfirmedSymptoms(res1);
+      
+     }
+  }
+
+  const selectMoreSymptoms=(event)=>{
+    if(getConfirmedMoreSymptoms.includes(event.target.value)===true){
+      // let res1=getConfirmedSymptoms.replace(event.target.value,'');
+        //setConfirmedSymptoms(res1);
+        let removeSymptom=event.target.value;
+        let res=getConfirmedMoreSymptoms.filter(item =>item !==removeSymptom);
+        setConfirmedMoreSymptoms(res);
+     }
+     else{
+      // let res=getConfirmedSymptoms.concat(event.target.value);
+      //setConfirmedSymptoms(res);
+     
+      let addSymptom=event.target.value;
+      let res1=getConfirmedMoreSymptoms.concat(addSymptom);
+      setConfirmedMoreSymptoms(res1);
+      
+     }
+  }
+
+
+  const selectDiseases=(event)=>{
+    if(getConfirmedDisease.includes(event.target.value)===true){
+      // let res1=getConfirmedSymptoms.replace(event.target.value,'');
+        //setConfirmedSymptoms(res1);
+        let removeSymptom=event.target.value;
+        let res=getConfirmedDisease.filter(item =>item !==removeSymptom);
+        setConfirmedDisease(res);
+     }
+     else{
+      // let res=getConfirmedSymptoms.concat(event.target.value);
+      //setConfirmedSymptoms(res);
+     
+      let addSymptom=event.target.value;
+      let res1=getConfirmedDisease.concat(addSymptom);
+      setConfirmedDisease(res1);
+      
+     }
+  }
+  const confirmDisease=()=>{
+    setDiseaseConfirm(true);
+  }
+  const confirmMoreSymptoms=()=>{
+    setConfirmMore(true);
+  }
+  const confirmSymptoms=()=>{
+    setConfirm(true);
   }
   const handleDisease=(event)=>{
     setDiseaseOption(true);
@@ -171,6 +264,77 @@ function CovidInput() {
     setlanguage(event);
     
   }
+  const handleRouting=()=>{
+    if ((getTemp === t("COMMON.temperatureOptions.Normal") || getTemp=== t("COMMON.temperatureOptions.Don't Know"))
+    &&
+    getConfirmedSymptoms.length=== 0
+    &&
+    getConfirmedMoreSymptoms.length ===0
+    &&
+    getSmokeInfo=== t("COMMON.SmokeOptions.Current Smoker") 
+    &&
+    getTravelDetails !== t("COMMON.TravelOptions.No Travel History")
+    &&
+    getConfirmedDisease.length ===0
+    ){  
+
+        console.log("In moderate")
+        handleResults("Moderate");
+    }
+    else if ( (getTemp === t("COMMON.temperatureOptions.Normal") || getTemp=== t("COMMON.temperatureOptions.Don't Know"))
+    &&
+    getConfirmedSymptoms.length=== 0
+    &&
+    getConfirmedMoreSymptoms.length ===0
+    &&
+    getSmokeInfo
+    &&
+    getTravelDetails
+    &&
+    getConfirmedDisease.length ===0
+    ){
+      
+      console.log("In low:")
+     
+      handleResults("low");
+    }
+  }
+
+  const handlelastRouting=()=>{
+    if ((getTemp===t("COMMON.temperatureOptions.Normal") || getTemp===t("COMMON.temperatureOptions.Don't Know") )
+    &&
+    getConfirmedSymptoms.length <=1
+    &&
+    getConfirmedMoreSymptoms.length <=1
+    &&
+    getConfirmedDisease.length <=1 
+    &&
+   ( getLastConfirm === t("COMMON.SymptomsCheckOptions.Improved") || getLastConfirm === t("COMMON.SymptomsCheckOptions.No Change"))
+    ){
+      
+      console.log("In low:")
+     
+      handleResults("low");
+    }
+     else  if ((getTemp !==t("COMMON.temperatureOptions.Normal") || getTemp !==t("COMMON.temperatureOptions.Don't Know"))
+      &&
+      getConfirmedSymptoms.length >=3
+      &&
+      getConfirmedMoreSymptoms.length >=3
+      &&
+      getTravelDetails !== t("COMMON.TravelOptions.No Travel History")
+      &&
+      getConfirmedDisease.length >=3 
+      ){  
+  
+          console.log("In High")
+          handleResults("High");
+      }
+      else{
+            console.log("In moderate");
+            handleResults("Moderate");
+      }
+  }
   const handleChange=(event)=>{
     
     setAge(event.target.value);
@@ -182,6 +346,7 @@ function CovidInput() {
   const t = useTranslation();
   
   return (
+
     <div className={classes.root}>
       <div>
       <AppBar position="static" style={{backgroundColor:"white", height:"75px"}}>
@@ -194,10 +359,8 @@ function CovidInput() {
       </AppBar>
       </div>
       <div className={classes.bodyStyle}>
-    
-      <Button
       
-      variant="contained" className={classes.inputStyle} color="primary">Hello, Please tell us which language you'd like to take this test in:</Button>
+      <Button variant="contained" className={classes.inputStyle} color="primary">Hello, Please tell us which language you'd like to take this test in:</Button>
       { isClicked===false ? 
       <div>
       <ButtonBase variant="contained" value="English" className={classes.firstButton} onClick={(event)=>setStates(event.target.value)}>English</ButtonBase>
@@ -243,7 +406,7 @@ function CovidInput() {
     
             </div>
             <div>
-        <Button variant="default" onClick={()=>setDone(true)} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"10px",marginLeft:"950px",textTransform:"none",fontStyle:"normal"}}>{t("COMMON.DoneButton")}</Button>
+         <Button variant="default" onClick={()=>setDone(true)} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",marginTop:"10px",marginLeft:"950px",textTransform:"none",fontStyle:"normal"}}>{t("COMMON.DoneButton")}</Button>
             </div>
             </Fragment>
 
@@ -287,41 +450,61 @@ function CovidInput() {
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SymptomsQuery")}</Button>
            
             </div>
-            {haveSymptoms===false ?
+            { (haveSymptoms || isConfirmSymptoms)  ===false ?
             <div>
-            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.DryCough")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.DryCough")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.loss or dim")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.loss or dim")}</ButtonBase>
-          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Sore Throat")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Sore Throat")}</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Weakness")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Weakness")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.DryCough")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.DryCough")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.loss or dim")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.loss or dim")}</ButtonBase>
+          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Sore Throat")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.Sore Throat")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.SymptomsOptions.Weakness")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.Weakness")}</ButtonBase>
          <div>
-         <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.Change in Appetite")} onClick={handleSymptoms}>{t("COMMON.SymptomsOptions.Change in Appetite")}</ButtonBase>
-            <ButtonBase variant="default" onClick={handleSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.None of these")}>{t("COMMON.SymptomsOptions.None of these")}</ButtonBase>
-         </div>
-            </div>
+         <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.SymptomsOptions.Change in Appetite")} onClick={selectSymptoms}>{t("COMMON.SymptomsOptions.Change in Appetite")}</ButtonBase>
+            { getConfirmedSymptoms.length !==0 ?
+              <ButtonBase variant="default" onClick={confirmSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.Confirm")}>{t("COMMON.SymptomsOptions.Confirm")}</ButtonBase>
             :
+            <ButtonBase variant="default" onClick={handleSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",textTransform:"none",fontStyle:"normal"}} value={t("COMMON.SymptomsOptions.None of these")}>{t("COMMON.SymptomsOptions.None of these")}</ButtonBase>
+            }
+            </div>
+            </div>
+          :
             <div>
+              {haveSymptoms ===true ?
+              <div>
               <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getSymptom}>{getSymptom}</Button>
+              </div>
+              :
+              <div>
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedSymptoms}>{getConfirmedSymptoms}</Button>
+              </div>
+              }
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.MoreSymptomsQuery")}</Button>
             </div>
-            {haveMoreSymptoms===false ?
+            { (haveMoreSymptoms || isConfirmMoreSymptoms) ===false ?
             <div style={{marginLeft:"-300px !important"}}>
-            <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Moderate")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Moderate")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Feeling Breathless")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Feeling Breathless")}</ButtonBase>
-          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Difficulty")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Difficulty")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Moderate")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Moderate")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Feeling Breathless")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Feeling Breathless")}</ButtonBase>
+          <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Difficulty")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Difficulty")}</ButtonBase>
           <div>
-         <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Drowsiness")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Drowsiness")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.firstButton} style={{marginLeft:"50px"}} value={t("COMMON.MoreSymptomsOptions.Drowsiness")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Drowsiness")}</ButtonBase>
         
-         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Persistant")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Persistant")}</ButtonBase>
-         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Severe Weakness")} onClick={handleMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Severe Weakness")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Persistant")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Persistant")}</ButtonBase>
+         <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.MoreSymptomsOptions.Severe Weakness")} onClick={selectMoreSymptoms}>{t("COMMON.MoreSymptomsOptions.Severe Weakness")}</ButtonBase>
          </div><div>
+           {getConfirmedMoreSymptoms.length ===0 ?
          <ButtonBase variant="default" onClick={handleMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.MoreSymptomsOptions.None of These")}>{t("COMMON.MoreSymptomsOptions.None of These")}</ButtonBase>
-           </div>
+         :
+         <ButtonBase variant="default" onClick={confirmMoreSymptoms} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.MoreSymptomsOptions.Confirm")}>{t("COMMON.MoreSymptomsOptions.Confirm")}</ButtonBase>
+           }  
+         </div>
             </div>
           :
               <div>
+                {haveMoreSymptoms === true ?
             <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getMoreSymptom}>{getMoreSymptom}</Button>
-            <div>
+           :
+           <Button variant="contained" className={classes.buttonStyle}  style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedMoreSymptoms}>{getConfirmedMoreSymptoms}</Button>
+          }
+           <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SmokeQuery")}</Button>
             </div>
             {doSmoke===false ?
@@ -353,20 +536,57 @@ function CovidInput() {
             <div>
             <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.DiseaseQuery")}</Button>
             </div>
+            { (DiseaseOptionClick || isDiseaseConfirm) === false  ?
             <div>
-            <ButtonBase variant="contained" className={classes.firstButton}  value={t("COMMON.DiseaseOptions.Diabetes")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Diabetes")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.HBP")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.HBP")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Heart Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Heart Disease")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Kidney Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Kidney Disease")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton}  value={t("COMMON.DiseaseOptions.Diabetes")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Diabetes")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.HBP")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.HBP")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Heart Disease")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Heart Disease")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Kidney Disease")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Kidney Disease")}</ButtonBase>
             <div>
-            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.DiseaseOptions.Lung Disease")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Lung Disease")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Stroke")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Stroke")}</ButtonBase>
-            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Reduced Immunity")} onClick={handleDisease}>{t("COMMON.DiseaseOptions.Reduced Immunity")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.firstButton} value={t("COMMON.DiseaseOptions.Lung Disease")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Lung Disease")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Stroke")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Stroke")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} value={t("COMMON.DiseaseOptions.Reduced Immunity")} onClick={selectDiseases}>{t("COMMON.DiseaseOptions.Reduced Immunity")}</ButtonBase>
             </div>
             <div>
-            <ButtonBase variant="default" onClick={handleDisease} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.None of These")}>{t("COMMON.DiseaseOptions.None of These")}</ButtonBase>
+              {getConfirmedDisease.length ===0 ?
+            <ButtonBase variant="default" onClick={(event)=>{
+              selectDiseases(event)
+              handleRouting() 
+             }} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.None of These")}>{t("COMMON.DiseaseOptions.None of These")}</ButtonBase>
+           :
+            <ButtonBase variant="default" onClick={confirmDisease} style={{backgroundColor:"orange",color:"white",borderRadius:"8px",padding:"10px 20px",fontSize:"14px",marginTop:"5px",marginLeft:"400px" ,textTransform:"none",fontStyle:"normal"}} value={t("COMMON.DiseaseOptions.Confirm")}>{t("COMMON.DiseaseOptions.Confirm")}</ButtonBase>
+            }
             </div>
             </div>
+            : 
+            <div>
+              {DiseaseOptionClick ===true ?
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getDiseaseDetails}>{getDiseaseDetails}</Button>
+              :
+              <Button variant="contained" className={classes.buttonStyle} style={{color:"darkblue",fontSize:"14px",marginLeft:"950px"}} value={getConfirmedDisease}>{getConfirmedDisease}</Button>
+               }
+              <div>
+              <Button variant="contained" className={classes.inputStyle} color="primary">{t("COMMON.SymptomsCheck")}</Button>
+                </div>
+            <div style={{marginBottom:"50px"}}>
+            <ButtonBase variant="contained" className={classes.firstButton}  onClick={(event)=>{
+              handleLastConfirm(event)
+              handlelastRouting()
+            }} value={t("COMMON.SymptomsCheckOptions.Improved")}>{t("COMMON.SymptomsCheckOptions.Improved")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} onClick={(event)=>{
+              handleLastConfirm(event)
+              handlelastRouting()
+              }} value={t("COMMON.SymptomsCheckOptions.No Change")}>{t("COMMON.SymptomsCheckOptions.No Change")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} onClick={(event)=>{
+              handleLastConfirm(event)
+              handlelastRouting()}}  value={t("COMMON.SymptomsCheckOptions.Worsened")}>{t("COMMON.SymptomsCheckOptions.Worsened")}</ButtonBase>
+            <ButtonBase variant="contained" className={classes.buttonStyle} onClick={(event)=>{
+              handleLastConfirm(event)
+              handlelastRouting()}}  value={t("COMMON.SymptomsCheckOptions.WorsenedMore")}>{t("COMMON.SymptomsCheckOptions.WorsenedMore")}</ButtonBase>
+              </div>
+
+              </div>
+            }
             </div>
                }
               </div>
@@ -384,12 +604,11 @@ function CovidInput() {
          
         </div>
       }
-      <Fab style={{backgroundColor:"white",color:"#30b085",marginLeft:"1250px",marginTop:"450px"}} aria-label="refresh">
+      <Fab onClick={()=>window.location.reload()}  style={{backgroundColor:"white",color:"#30b085",marginLeft:"1250px",marginTop:"450px"}} aria-label="refresh">
         <RefreshIcon />
       </Fab>
        </div>
   </div> 
-  
   );
 }
 export default CovidInput;

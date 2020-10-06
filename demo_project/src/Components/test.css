@@ -3,13 +3,18 @@ span{
     width:12px;
     border-radius:50%;
     display:inline-block;
-    margin:.2rem;
+    margin:.1rem;
     animation: scaling 1.5s ease-in-out infinite;
     padding:2px;
 }
-div{
+#hideDiv{
     margin-left:10%;
     margin-top:10%;
+    border:1px solid lightblue;
+    width:80px;
+    border-radius:8px;
+    height:25px;
+    background-color:blue;
 }
 @keyframes scaling{
     0%,100%{

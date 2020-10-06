@@ -69,7 +69,8 @@
              "Lung Disease":"Lung Disease(Asthama,COPD,TB etc)",
              "Stroke":"Stroke",
              "Reduced Immunity":"Reduced Immunity",
-             "None of These":"None of These"
+             "None of These":"None of These",
+             "Confirm":"Confirm"
           },
           "SymptomsCheck":"How have your symptoms progressed over the last 48 hrs?",
           "SymptomsCheckOptions":{

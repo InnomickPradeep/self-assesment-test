@@ -10,7 +10,6 @@ function App() {
       <Switch>
       <Route path="/" exact component={CovidInput}/>
       <Route path="/Results/:report" exact component={Results} />
-
       </Switch>
       </div>
       </Router>

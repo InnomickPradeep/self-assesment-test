@@ -5,13 +5,25 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles} from '@material-ui/core/styles';
 import { ButtonBase } from '@material-ui/core';
 import {useParams} from 'react-router';
+import { withStyles } from '@material-ui/core/styles';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow:1,
-      maxHeight:"auto",
-      backgroundColor:"#ebedec"
+      maxHeight:"3700px !important",
+      backgroundColor:"#ebedec",
+      width:"100%",
+      height:"100%",
+      backgroundAttachment:"fixed",
+      backgroundSize:"100%"
+      
     },
     title: {
       flexGrow: 1,
@@ -25,21 +37,21 @@ const useStyles = makeStyles((theme) => ({
       
     },
     greydiv:{
-        marginLeft:"400px",
+        marginLeft:"350px",
         border:"1px solid #ebedec",
         borderRadius:"16px",
         backgroundColor:"#ebedec",
-        marginRight:"400px",
+        marginRight:"350px",
         paddingLeft:"10px",
         marginTop:"30px",
         boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     },
     result:{
-        marginLeft:"400px",
+        marginLeft:"350px",
         border:"1px solid white",
         borderRadius:"16px",
         backgroundColor:"white",
-        marginRight:"400px",
+        marginRight:"350px",
         paddingLeft:"10px",
         marginTop:"30px",
     },
@@ -51,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
     downloadButton:{
         border:"1px solid white",
         backgroundColor:"orange",
-        marginLeft:"200px",
-        marginRight:"200px",
+        marginLeft:"150px",
+        marginRight:"150px",
         marginBottom:"20px",
         color:"white",
         padding:"16px 40px",
@@ -65,7 +77,8 @@ const useStyles = makeStyles((theme) => ({
       fontWeight:"600"
     },
     lastStyle:{
-      color:"#567da6"
+      color:"#567da6",
+      fontSize:"18px",
     },
     accordian:{
         border:"1px solid white",
@@ -89,6 +102,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor:"white", 
       height:"75px"
     },
+    position1:{
+      position:"relative",
+      marginTop:"70px",
+    },
     spanStyle:{
       color:"#567da6",
       fontSize:"18px"
@@ -98,6 +115,18 @@ const useStyles = makeStyles((theme) => ({
       color:"black",
       fontWeight:"600"
     },
+    image:{
+      position:"absolute",
+      borderRadius:"50%",
+      marginLeft:"530px",
+      marginTop:"-40px",
+    },
+    guage:{
+      position:"absolute",
+      marginLeft:"380px",
+      marginBottom:"10px",
+     
+    },
     govtStyle:{
       color:"grey",
       fontSize:"14px"
@@ -106,10 +135,58 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
+const Accordion = withStyles({
+  root: {
+    border:'none',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    '&$expanded': {
+      margin: 'auto',
+    },
+  },
+  expanded: {},
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
+  root: {
+   fontSize:"18px",
+   marginLeft:"150px",
+   marginRight:"250px",
+    color:"orange",
+    border:"none",
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiAccordionDetails);
+
+
+//this is the function that shows the entire results page based on the user selected options. It will render low,
+//medium or high illness results page based on user entered values
 function Results(){
     const classes = useStyles();
     const name=useParams();
-    console.log(name.report);
+
     return(
         <div className={classes.root}>
          <div>
@@ -126,7 +203,8 @@ function Results(){
            {name.report === "low" ?
            <div>
             <div className={classes.result}>
-            <p style={{fontSize:"24px",color:"green"}}>LOW</p>
+            <p style={{fontSize:"24px",color:"green",position:"relative"}}>LOW
+            <img src={process.env.PUBLIC_URL + "/lowguage.jpg"} width="150" height="80" alt="women log" className={classes.guage}/></p>
             <p className={classes.style1}>Respiratory illness</p>
             </div>
 
@@ -150,7 +228,8 @@ function Results(){
            {name.report==="Moderate" ?
            <div>
              <div className={classes.result}>
-            <p style={{fontSize:"24px",color:"Orange"}}>Medium</p>
+            <p style={{fontSize:"24px",color:"#86db37"}}>Medium
+            <img src={process.env.PUBLIC_URL + "/mediumguage.jpg"} width="150" height="80" alt="women log" className={classes.guage}/></p>
             <p className={classes.style1}>Respiratory illness</p>
             </div>
 
@@ -165,8 +244,8 @@ function Results(){
              2.<span style={{color:"orange"}}> Virtual Consult </span><br/>
            3. Prevention and precautions <span style={{color:"orange"}}> SEE BELOW </span><br/>
            4. Laboratory tests and imaging may be needed as per your physician's advise<br/>
-           4. COVID 19 testing may be required at your physician’s advise<br/>
-           5. Monitor your symptoms and get medical attention if your situation worsens<br/>
+           5. COVID 19 testing may be required at your physician’s advise<br/>
+           6. Monitor your symptoms and get medical attention if your situation worsens<br/>
             </p>
             </div>
 
@@ -176,7 +255,8 @@ function Results(){
              <div>
 
             <div className={classes.result}>
-            <p style={{fontSize:"24px",color:"Red"}}>HIGH</p>
+            <p style={{fontSize:"24px",color:"Red",fontWeight:"500"}}>HIGH
+            <img src={process.env.PUBLIC_URL + "/highguage.jpg"} width="150" height="80" alt="women log" className={classes.guage}/></p>
             <p className={classes.style1}>Respiratory illness</p>
             </div>
 
@@ -188,7 +268,7 @@ function Results(){
             <p style={{fontSize:"18px"}}>Based on your inputs, Apollo 247 advises the following:</p>
             <p className={classes.style1}>
              1. Urgent Consult - Please contact your nearest Apollo Hospital for further evaluation<br/>
-             2.Please visit a physician as there may be a requirement for further care
+             2.Please visit a physician as there may be a requirement for further care<br/>
            3. Prevention and precautions <span style={{color:"orange"}}> SEE BELOW </span><br/>
            4. Laboratory tests and imaging may be needed as per your physician's advise<br/>
            5. COVID 19 testing may be required at your physician’s advise<br/>
@@ -200,11 +280,13 @@ function Results(){
              }
                </div>
           }
-
+            <div className={classes.position1}>
             <div className={classes.result}>
+            <img src={process.env.PUBLIC_URL + "/women_img1.png"} width="75" height="75" alt="women log" className={classes.image}/>
             <p className={classes.healthStyle}>Your health matters to us <br/>
             <span className={classes.spanStyle}>If you have more questions, call the Corona Helpline number on the Apollo 247 App. Buy Corona care products on the Apollo 247 App</span></p>
             <p><ButtonBase className={classes.downloadButton}>DOWNLOAD APOLLO247 APP</ButtonBase></p>
+            </div>
             </div>
 
             <div className={classes.greydiv}>
@@ -219,6 +301,24 @@ function Results(){
                <p className={classes.lastStyle}> 3. All symptomatic health care workers</p>
                <p className={classes.lastStyle}> 4. All patients with Severe Acute Respiratory Illness (fever AND cough and/or shortness of breath)</p>
                <p className={classes.lastStyle}> 5. Asymptomatic direct and high-risk contacts of a confirmed case should be tested once between day 5 and day 14 of coming in his/her contact</p>
+               <div>
+               <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>View more</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        <p>In hotspots/cluster (as per MoHFW) and in large migration gatherings/ evacuees centres,
+         <br/>
+         <p className={classes.lastStyle}>6.All symptomatic ILI (fever, cough, sore throat, runny nose)<br/>a. Within 7 days of illness – rRT-PCR
+        <br/>b. After 7 days of illness – Antibody test (If negative, confirmed by rRT-PCR)</p> </p>
+        </AccordionDetails>
+      </Accordion>
+
+                 </div>
                </div>
                 </div>
             </div>
@@ -226,7 +326,7 @@ function Results(){
             <div  className={classes.greydiv} style={{marginBottom:"100px"}}>
             <p className={classes.preventionStyle}>Preventions and Precautions<br/>
             <span className={classes.govtStyle}>Basic Protective Measures</span></p>
-            <p>Be aware or Educate yourself with the latest updates on the following websites : WHO & MoHFW </p>
+            <p>Be aware or Educate yourself with the latest updates on the following websites : <span style={{textDecoration:"underline"}}>WHO & MoHFW </span></p>
 
             <p>Most people who become infected experience mild illness and recover, but it can be more severe for others.</p>
 
@@ -243,12 +343,55 @@ function Results(){
 
                 <h4 className={classes.lastStyle}>Avoid touching eyes, nose and mouth</h4>
                 <p className={classes.lastStyle}>Our hands touch many surfaces and can pick up viruses. Once contaminated, hands can transfer the virus to your eyes, nose or mouth.</p>
+
+              <Accordion>
+        <AccordionSummary
+          expandIcon={< ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography >View more</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <p>
+        <p>
+        <h4 className={classes.lastStyle}>Practice respiratory hygiene</h4>
+        <p className={classes.lastStyle}>Make sure you and the people around you, follow good respiratory hygiene. This means covering your mouth and nose with your bent elbow or tissue when you cough or sneeze. Then dispose of the used tissue immediately.</p>
+        </p>
+        
+
+        <p>
+        <h4 className={classes.lastStyle}>If you have fever, cough and difficulty in breathing, seek medical care early</h4>
+        <p className={classes.lastStyle}>Stay home if you feel unwell. If you have a high fever, moderate to severe cough and difficulty in breathing and it is worsening in short period of time, seek medical asistance and call in advance.</p>
+        </p>
+
+        <p>
+        <h4 className={classes.lastStyle}>Use a mask/face-cloth</h4>
+        <p className={classes.lastStyle}>Masks or cloth face coverings should be worn in public places and when going out of home where other social distancing measures are difficult to maintain. It should fit properly and comfortably against the side of the face, be secured with ties or ear loops and allow for breathing without restriction. Use of Masks or Cloth face coverings should not be placed on young children, those who have trouble breathing or otherwise unable to remove the mask without assistance.</p>
+        </p>
+          </p>
+
+        
+        </AccordionDetails>
+      </Accordion>
+
+
                </div>
+    
                 </div>
             </div>
 
         </div>
+        <div>
+          <div style={{visibility:"hidden"}}>
+                <p>COVID RISK ASSESMENT AND SURVEY </p>
+                <p>Developed using React and Material UI</p>
+                <p>---------------</p>
+                <p>-------------</p>
+              </div>
+          </div>
       </div>
+       
     )
 
 

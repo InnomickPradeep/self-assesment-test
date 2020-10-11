@@ -1,0 +1,24 @@
+.buttonStyle{
+    margin-right:5px;
+    color:#30b085;
+     background-color:white;
+     border-radius:8px;
+     font-size:14px;
+     padding:10px 20px;
+     font-weight:normal;
+     font-style:normal;
+     text-transform:none;
+     margin-top:8px;
+}
+.selectedButtonStyle{
+    margin-right:5px;
+    color:white;
+     background-color:#30b085;
+     border-radius:8px;
+     font-size:14px;
+     padding:10px 20px;
+     font-weight:normal;
+     font-style:normal;
+     text-transform:none;
+     margin-top:8px;
+}
